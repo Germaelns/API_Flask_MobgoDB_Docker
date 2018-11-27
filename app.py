@@ -9,6 +9,7 @@ app.config['MONGO_URI'] = 'mongodb://db:27017/api_db'
 mongo = PyMongo(app)
 
 
+# get orders by service and operator
 # use URL order?service=service&operator=operator
 @app.route('/order', methods=['GET'])
 def view_order():
@@ -17,13 +18,14 @@ def view_order():
     operator = request.args['operator']
     q = order.find_one({'service': service, 'operator': operator})
     if q:
-        result = {'service': q['service'], 'operator': q['operator'], 'price': price}
+        result = {'service': q['service'], 'operator': q['operator'], 'price': q['price']}
     else:
         result = 'No results found'
 
     return jsonify({'result': result})
 
 
+# add new order
 # use URL order?service=service&operator=Nikolay&price=200
 @app.route('/order', methods=['POST'])
 def add_order():
@@ -37,6 +39,7 @@ def add_order():
     return 'Order added!'
 
 
+# delete order by all information
 # use URL order?service=service&operator=Nikolay&price=200
 @app.route('/order', methods=['DELETE'])
 def delete_order():
@@ -52,6 +55,7 @@ def delete_order():
         return 'Order not found!!'
 
 
+# get all orders
 @app.route('/order/all', methods=['GET'])
 def all_orders():
     order = mongo.db.order
